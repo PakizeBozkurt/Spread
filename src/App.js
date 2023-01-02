@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ToDoCmpnt from "./ToDoCmpnt";
 import "./index.css";
 
+
 function App() {
   const [inputText, setInputText] = useState("");
   const [items, setItems] = useState([]);
@@ -11,9 +12,19 @@ function App() {
     setInputText(newValue);
   }
 
-  function addItems() {
-    setItems((prevValue) => [...prevValue, inputText]);
+  function addItem() {
+    setItems((prevItems) => {
+      return [...prevItems, inputText];
+    });
     setInputText("");
+  }
+
+  function deleteItem(id) {
+    setItems((prevItems) => {
+      return prevItems.filter((item, index) => {
+        return index !== id;
+      });
+    });
   }
 
   return (
@@ -23,15 +34,18 @@ function App() {
       </div>
       <div className="form">
         <input onChange={handleChange} type="text" value={inputText} />
-        <button onClick={addItems}>
+        <button onClick={addItem}>
           <span>Add</span>
         </button>
       </div>
       <div>
         <ul>
-          {items.map((todoItem) => (
-           <ToDoCmpnt
-           text={todoItem}
+          {items.map((todoItem, index) => (
+            <ToDoCmpnt
+              key={index}
+              id={index}
+              text={todoItem}
+              onChecked={deleteItem}
             />
           ))}
         </ul>
